@@ -12,10 +12,10 @@ SET registration_date = date_sub(registration_date, INTERVAL 1 YEAR);
 
 UPDATE customer_orders
 SET exclusions = CASE 
-				 WHEN (exclusions = '' OR exclusions = 'null') THEN null
-				 ELSE exclusions 
-				 END,
-		extras = CASE 
+		 WHEN (exclusions = '' OR exclusions = 'null') THEN null
+		 ELSE exclusions 
+		 END,
+	extras = CASE 
                  WHEN (extras = '' OR extras = 'null') THEN null
                  ELSE extras 
                  END;
@@ -34,7 +34,7 @@ SET pickup_time = CASE
                   ELSE distance 
                   END,
        duration = CASE 
-			      WHEN (duration = '' OR duration = 'null') THEN NULL
+	          WHEN (duration = '' OR duration = 'null') THEN NULL
                   ELSE duration 
                   END,
    cancellation = CASE 
@@ -50,7 +50,7 @@ WHERE order_id = 3;
 
 UPDATE runner_orders
 SET distance = regexp_replace(distance, "[a-z]", ''),
-	duration = regexp_replace(duration, "[a-z]", '');
+    duration = regexp_replace(duration, "[a-z]", '');
 -----------------------------------
 
 ALTER TABLE runner_orders
@@ -72,7 +72,7 @@ FROM customer_orders;
 
 -- 2. How many unique customer orders were made?
 
-SELECT  COUNT(distinct order_id) AS uniq_customer_orders
+SELECT COUNT(distinct order_id) AS uniq_customer_orders
 FROM customer_orders;  
 
 ------------------------------------------------------------
@@ -101,7 +101,7 @@ GROUP BY piz.pizza_name;
 -- ANOTHER SOLUTION
 SELECT SUM(CASE
            WHEN piz_nam.pizza_name = 'Meatlovers' THEN 1 
-		   ELSE 0 
+	   ELSE 0 
            END) AS Meat_Lovers,
 	   SUM(CASE 
            WHEN piz_nam.pizza_name = 'Vegetarian' THEN 1
@@ -119,14 +119,14 @@ ON run_ord.order_id = cus_ord.order_id AND run_ord.cancellation IS NULL;
 -- 5.How many Vegetarian and Meatlovers were ordered by each customer? 
 
 SELECT cus_ord.customer_id,
-       SUM(CASE 
-		   WHEN piz.pizza_name = 'Meatlovers' THEN 1 
-           ELSE 0 
-           END) AS meatlovers_ordered,
-	   SUM(CASE 
-           WHEN piz.pizza_name = 'Vegetarian' THEN 1
-           ELSE 0 
-           END) AS vegetarian_ordered
+                  SUM(CASE 
+		      WHEN piz.pizza_name = 'Meatlovers' THEN 1 
+                      ELSE 0 
+                      END) AS meatlovers_ordered,
+	              SUM(CASE 
+                      WHEN piz.pizza_name = 'Vegetarian' THEN 1
+                      ELSE 0 
+                      END) AS vegetarian_ordered
            
 FROM pizza_names piz
 JOIN customer_orders cus_ord
@@ -155,14 +155,14 @@ FROM orders_count;
 -- 7.For each customer, how many delivered pizzas had at least 1 change and how many had no changes? 
 
 SELECT cus_ord.customer_id,
-	              SUM(CASE 
-				  WHEN exclusions IS NOT NULL OR extras IS NOT NULL THEN 1
-                  ELSE 0 
-                  END) AS changed_,
-                  SUM(CASE 
-                  WHEN exclusions IS NULL AND extras IS NULL THEN 1
-                  ELSE 0 
-                  END) AS not_changed
+	           SUM(CASE 
+		       WHEN exclusions IS NOT NULL OR extras IS NOT NULL THEN 1
+                       ELSE 0 
+                       END) AS changed_,
+                   SUM(CASE 
+                       WHEN exclusions IS NULL AND extras IS NULL THEN 1
+                       ELSE 0 
+                       END) AS not_changed
                   
 FROM customer_orders cus_ord
 JOIN runner_orders run_ord
